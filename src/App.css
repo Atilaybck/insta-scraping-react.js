@@ -1,0 +1,70 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Genel Container */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Form Alanı */
+.form-container {
+  width: 45%;
+  text-align: left;
+}
+.form-container form {
+  display: flex;
+  flex-direction: column;
+}
+.form-container label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+.form-container input {
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.form-container button {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #007BFF;
+  border: none;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Sağ Taraftaki Müşteri Listesi */
+.right-container {
+  width: 45%;
+  text-align: left;
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+}
+.right-container h2 {
+  margin-bottom: 20px;
+}
+.customer-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+.customer-card .customer-checkbox {
+  margin-right: 15px;
+}
+.customer-card p {
+  margin: 5px 0;
+  font-size: 14px;
+}
