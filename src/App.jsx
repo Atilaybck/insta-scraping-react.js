@@ -10,6 +10,7 @@ function App() {
     phone: '',
     instagram: '',
     sector: '',
+    note: '', // Not alanı (opsiyonel)
   });
   const [customers, setCustomers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,9 +22,11 @@ function App() {
     phone: '',
     instagram: '',
     sector: '',
+    note: '', // Düzenleme kısmına not ekliyoruz
     isContracted: 'false',
     mailOpened: 'false',
     replied: 'false',
+    priority: 'false',
   });
   const [error, setError] = useState('');
   const [totalCount, setTotalCount] = useState(0);
@@ -41,7 +44,7 @@ function App() {
     try {
       const response = await axios.get('http://localhost:5000/api/customers?isContracted=false');
       setCustomers(response.data.slice(0, 5));
-      setCheckedIndexes([]); 
+      setCheckedIndexes([]);
     } catch (error) {
       console.error('Müşteri verileri alınırken hata oluştu:', error);
     }
@@ -82,7 +85,6 @@ function App() {
       const found = response.data[0] || null;
       setSearchResult(found);
 
-      // Arama sonucu bulunduğunda, düzenleme alanına da yerleştir
       if (found) {
         setSearchEditData({
           _id: found._id,
@@ -91,9 +93,11 @@ function App() {
           phone: found.phone,
           instagram: found.instagram,
           sector: found.sector,
+          note: found.note || '',
           isContracted: found.isContracted ? 'true' : 'false',
           mailOpened: found.mailOpened ? 'true' : 'false',
           replied: found.replied ? 'true' : 'false',
+          priority: found.priority ? 'true' : 'false',
         });
       }
     } catch (error) {
@@ -116,14 +120,14 @@ function App() {
         phone: searchEditData.phone,
         instagram: searchEditData.instagram,
         sector: searchEditData.sector,
+        note: searchEditData.note,
         isContracted: searchEditData.isContracted === 'true',
         mailOpened: searchEditData.mailOpened === 'true',
         replied: searchEditData.replied === 'true',
+        priority: searchEditData.priority === 'true',
       });
-  
+
       alert('Veriler güncellendi.');
-      
-      // Arama sonucu ve düzenleme formunu sıfırla
       setSearchResult(null);
       setSearchEditData({
         _id: '',
@@ -132,19 +136,19 @@ function App() {
         phone: '',
         instagram: '',
         sector: '',
+        note: '',
         isContracted: 'false',
         mailOpened: 'false',
         replied: 'false',
+        priority: 'false',
       });
-  
-      // Diğer listeleri ve sayıları güncelle
       fetchCustomers();
       fetchContractedCounts();
     } catch (error) {
       console.error('Güncelleme sırasında hata oluştu:', error);
       alert('Güncelleme yapılırken hata oluştu.');
     }
-  };  
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -157,7 +161,14 @@ function App() {
       const response = await axios.post('http://localhost:5000/api/instagram', formData);
       if (response.status === 201) {
         alert('Bilgiler başarıyla kaydedildi.');
-        setFormData({ name: '', email: '', phone: '', instagram: '', sector: '' });
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          instagram: '',
+          sector: '',
+          note: '',
+        });
         fetchCustomers();
         fetchTotalCount();
         fetchContractedCounts();
@@ -231,6 +242,14 @@ function App() {
             onChange={handleChange}
             required
           />
+          {/* Not alanı (opsiyonel) */}
+          <label>Not:</label>
+          <textarea
+            name="note"
+            value={formData.note}
+            onChange={handleChange}
+            placeholder="Opsiyonel not alanı..."
+          />
           <button type="submit">Kaydet</button>
         </form>
 
@@ -282,7 +301,14 @@ function App() {
               value={searchEditData.sector}
               onChange={handleSearchFieldChange}
             />
-
+            {/* Not alanı */}
+            <label>Not:</label>
+            <textarea
+              name="note"
+              value={searchEditData.note}
+              onChange={handleSearchFieldChange}
+              placeholder="Opsiyonel not alanı..."
+            />
             <div>
               <label><strong>İletişim Durumu (isContracted):</strong></label>
               <select
@@ -310,6 +336,17 @@ function App() {
               <select
                 name="replied"
                 value={searchEditData.replied}
+                onChange={handleSearchFieldChange}
+              >
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+            </div>
+            <div>
+              <label><strong>Öncelikli mi (priority):</strong></label>
+              <select
+                name="priority"
+                value={searchEditData.priority}
                 onChange={handleSearchFieldChange}
               >
                 <option value="true">True</option>
